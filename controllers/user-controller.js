@@ -1,10 +1,10 @@
-const { User, Thought } = require('../models');
+const { user, thought } = require('../models');
 
 const userController = {
     //get all users
     getUsers(req, res) {
-        User.find()
-        .select('-_v')
+        user.find()
+        .select('-__v')
         .then((dbUserData) => {
            res.json(dbUserData); 
         })
@@ -16,8 +16,8 @@ const userController = {
 
     // get single user by id
     getSingleUser(req, res) {
-        User.findOne({ _id: req.params.userId })
-        .select('-_v')
+        user.findOne({ _id: req.params.userId })
+        .select('-__v')
         .populate('friends')
         .populate('thoughts')
         .then((dbUserData) => {
@@ -34,7 +34,7 @@ const userController = {
 
     //create a new user
     createUser(req, res) {
-        User.create(req.body)
+        user.create(req.body)
         .then((dbUserData) => {
             res.json(dbUserData);
         })
@@ -46,7 +46,7 @@ const userController = {
 
     // update a user
     updateUser(req, res) {
-        User.findOneAndUpdate(
+        user.findOneAndUpdate(
             { _id: req.params.userId },
             {
               $set: req.body,
@@ -70,14 +70,14 @@ const userController = {
 
     // delete user BONUS and delete associated thoughts)
     deleteUser(req, res) {
-        User.findOneAndDelete({ _id: req.params.userId })
+        user.findOneAndDelete({ _id: req.params.userId })
         .then ((dbUserData) => {
             if (!dbUserData) {
                 return res.status(404).json({ message: 'No user data with this id'});
             }
 
             //BONUS get id's of User's thoughts and  delete them all
-            return Thought.deleteMany({ _id: { $in: dbUserData.thoughts } });
+            return thought.deleteMany({ _id: { $in: dbUserData.thoughts } });
         })
         .then(() => {
             res.json({ message: 'User and associated thought deleted' });
@@ -90,7 +90,7 @@ const userController = {
 
     // add friend to friend list
     addFriend(req, res) {
-       User.findOneAndUpdate({ _id: req.params.userId }, {
+       user.findOneAndUpdate({ _id: req.params.userId }, {
             $addToSet: { friends: req.params.friendId } }, {
                 new: true })
                 .then ((dbUserData) => {
@@ -107,7 +107,7 @@ const userController = {
 
     // remove friend to friend list
     removeFriend(req, res) {
-    User.findOneAndUpdate({ _id: req.params.userId }, {
+    user.findOneAndUpdate({ _id: req.params.userId }, {
     $pull: { friends: req.params.friendId } }, { new: true })
     .then ((dbUserData) => {
         if (!dbUserData) {

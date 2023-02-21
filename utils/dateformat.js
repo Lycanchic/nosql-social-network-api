@@ -8,10 +8,9 @@ const addDateSuffix = (date) => {
         dateStr = `${dateStr}st`;
     } else if (lastChar === '2' && dateStr !== '12') {
         dateStr = `${dateStr}nd`;
-        dateStr = `${dateStr}st`;
     } else if (lastChar === '3' && dateStr !== '13') {
         dateStr = `${dateStr}rd`;
-    } else if (lastChar === '4' && dateStr !== '14') {
+    } else {
         dateStr = `${dateStr}th`;      
     }
 
@@ -43,7 +42,7 @@ const addDateSuffix = (date) => {
         const dateObj = new Date(timestamp);
         const formattedMonth = months[dateObj.getMonth()];
 
-        const dayOfTheMonth = dateSuffix
+        const dayOfMonth = dateSuffix
         ? addDateSuffix(dateObj.getDate())
         : dateObj.getDate();
 
@@ -61,7 +60,7 @@ const addDateSuffix = (date) => {
         const minutes = (dateObj.getMinutes() < 10 ? '0' : '') + dateObj.getMinutes();
 
     //set am or pm
-    const periodOfDay = dateObj.getHours() >= 2 ? 'pm' : 'am';
+    const periodOfDay = dateObj.getHours() >= 12 ? 'pm' : 'am';
 
     const formattedTimeStamp = `${formattedMonth} ${dayOfMonth}, ${year} at ${hour} : ${minutes} ${periodOfDay}`;
     
