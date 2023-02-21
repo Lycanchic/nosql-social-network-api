@@ -6,7 +6,7 @@ const userSchema = Schema(
             type: String,
             required: true,
             unique: true,
-            trim: trim,
+            trim: true,
         },
         emil: {
             type: String,
