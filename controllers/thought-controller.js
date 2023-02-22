@@ -1,4 +1,4 @@
-const { thought, user } = require("../models");
+const { thought, user } = require('../models');
 
 const thoughtController = {
   // get all thoughts
@@ -54,8 +54,7 @@ const thoughtController = {
     thought.findOneAndUpdate(
       { _id: req.params.thoughtId },
       { $set: req.body },
-      { runValidators: true, new: true }
-    )
+      { runValidators: true, new: true })
       .then((dbThoughtData) => {
         if (!dbThoughtData) {
           return res.status(404).json({ message: "No thought with user id" });
@@ -76,7 +75,7 @@ const thoughtController = {
         }
 
         // remove thought id from user's thoughts field
-        return User.findOneAndUpdate(
+        return user.findOneAndUpdate(
           { toughts: req.params.thoughtId },
           { $pull: { thoughts: req.params.thoughtId } },
           { new: true }
@@ -86,7 +85,7 @@ const thoughtController = {
         if (!dbUserData) {
           return res.status(404).json({ message: "Thought created but no user with this id" });
         }
-        res.json({ message: "Thought successfully deleted " });
+        res.json({ message: 'Thought successfully deleted' });
       })
       .catch((err) => {
         console.log(err);
