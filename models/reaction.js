@@ -1,12 +1,12 @@
-const { Schema, Types, models } = require('mongoose');
-const dateFormat = require('../utils/dateFormat');
+const { Schema, Types, models } = require("mongoose");
+const dateFormat = require("../utils/dateFormat");
 
 // This code creates an instance of the express.js router and sets up routes for handling requests related to user data.
 const reactionSchema = new Schema(
   {
     reactionId: {
       type: Types.ObjectId,
-      default: () => new Types.ObjectId()
+      default: () => new Types.ObjectId(),
     },
     reactionBody: {
       type: String,
@@ -19,7 +19,7 @@ const reactionSchema = new Schema(
     createdAt: {
       type: Date,
       default: Date.now,
-      get: timestamp => dateFormat(timestamp),
+      get: (timestamp) => dateFormat(timestamp),
     },
   },
   {
@@ -30,4 +30,4 @@ const reactionSchema = new Schema(
   }
 );
 
-module.exports =  reactionSchema;
+module.exports = reactionSchema;
