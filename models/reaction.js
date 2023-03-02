@@ -1,6 +1,7 @@
 const { Schema, Types, models } = require('mongoose');
 const dateFormat = require('../utils/dateFormat');
 
+// This code creates an instance of the express.js router and sets up routes for handling requests related to user data.
 const reactionSchema = new Schema(
   {
     reactionId: {

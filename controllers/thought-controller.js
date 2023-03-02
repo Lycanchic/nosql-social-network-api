@@ -102,11 +102,9 @@ const thoughtController = {
       })
       .then((userData) => {
         if (!userData) {
-          return res
-            .status(404)
-            .json({
-              message: "Thought created. Unable to locate a user with this id",
-            });
+          return res.status(404).json({
+            message: "Thought created. Unable to locate a user with this id",
+          });
         }
         res.json({ message: "Thought successfully deleted" });
       })
