@@ -4,74 +4,90 @@ const userController = {
     //get all users
     async getUsers(req, res) {
         try {
-          const dbUserData = await user.find().select("-__v");
-          res.json(dbUserData);
+          // Find all users and exclude "__v" field
+          const UserData = await user.find().select("-__v");
+          // Return user data as JSON
+          res.json(UserData);
+        // If there's an error
         } catch (err) {
+          // Log the error
           console.log(err);
+          // Return error message
           res.status(500).json(err);
         }
       },
     
-      // get single user by id
+      // To get single user by id
       async getSingleUser(req, res) {
         try {
-          const dbUserData = await user
+          // Find the user in the database using their id and populate their friends and thoughts
+          const UserData = await user
             .findOne({ _id: req.params.userId })
             .select("-__v")
             .populate("friends")
             .populate("thoughts");
-          if (!dbUserData) {
+            // If no user is found, return an error message with a status of 404
+          if (!UserData) {
             return res.status(404).json({ message: "No user with this id" });
           }
-          res.json(dbUserData);
+          
+// If the user is found, return their data
+          res.json(UserData);
         } catch (err) {
+          // If there is an error, log it to the console and return an error message with a status of 500
           console.log(err);
           res.status(500).json(err);
         }
       },
     
-      //create a new user
+      // To create a new user
       async createUser(req, res) {
         try {
-          const dbUserData = await user.create(req.body);
+          // Create a new user using the data in the request body
+          const UserData = await user.create(req.body);
           res.json(dbUserData);
         } catch (err) {
+          // If there is an error, log it to the console and return an error message with a status of 500
           console.log(err);
           res.status(500).json(err);
         }
       },
     
-      // update a user
+      // To update a user
       async updateUser(req, res) {
         try {
-          const dbUserData = await user.findOneAndUpdate(
+          // Find the user in the database by their id and update their data with the data in the request body
+          const UserData = await user.findOneAndUpdate(
             { _id: req.params.userId },
             { $set: req.body },
             {
+              // This option makes sure that the updated data passes all of the model's validation rules
               runValidators: true,
+              // This option tells mongoose to return the updated 
               new: true,
             }
           );
-          if (!dbUserData) {
+          
+          if (!UserData) {
             return res.status(404).json({ message: "No user with this id" });
           }
-          res.json(dbUserData);
+          res.json(UserData);
         } catch (err) {
           console.log(err);
           res.status(500).json(err);
         }
       },
     
-      // delete user BONUS and delete associated thoughts)
+      // Delete user and all associated thoughts)
       async deleteUser(req, res) {
         try {
-          const dbUserData = await user.findOneAndDelete({ _id: req.params.userId });
-          if (!dbUserData) {
+          const UserData = await user.findOneAndDelete({ _id: req.params.userId });
+          if (!UserData) {
             return res.status(404).json({ message: "No user data with this id" });
           }
     
-          //BONUS get id's of User's thoughts and  delete them all
-          await thought.deleteMany({ _id: { $in: dbUserData.thoughts } });
+          //delete all user thoughts
+          await thought.deleteMany({ _id: { $in: UserData.thoughts } });
           res.json({ message: "User and associated thought deleted" });
         } catch (err) {
           console.log(err);
@@ -79,36 +95,36 @@ const userController = {
         }
       },
     
-      // add friend to friend list
+      // Edit friedns's list, add a friend
       async addFriend(req, res) {
         try {
-          const dbUserData = await user.findOneAndUpdate(
+          const UserData = await user.findOneAndUpdate(
             { _id: req.params.userId },
             { $addToSet: { friends: req.params.friendId } },
             { new: true }
           );
-          if (!dbUserData) {
+          if (!UserData) {
             return res.status(404).json({ message: "No user data with this id" });
           }
-          res.json(dbUserData);
+          res.json(UserData);
         } catch (err) {
           console.log(err);
           res.status(500).json(err);
         }
       },
     
-      // remove friend to friend list
+      // Edit friend's list, remove a friend
       async removeFriend(req, res) {
         try {
-          const dbUserData = await user.findOneAndUpdate(
+          const UserData = await user.findOneAndUpdate(
             { _id: req.params.userId },
             { $pull: { friends: req.params.friendId } },
             { new: true }
           );
-          if (!dbUserData) {
+          if (!UserData) {
             return res.status(404).json({ message: "No user data with this id" });
           }
-          res.json(dbUserData);
+          res.json(UserData);
         } catch (err) {
           console.log(err);
           res.status(500).json(err);
